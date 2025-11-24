@@ -11,12 +11,22 @@ import { toast } from 'sonner';
 export function SeatingChart({ students = [], onBack }) {
   const rows = 5, cols = 6, totalSeats = rows * cols;
   const [seats, setSeats] = useState(() => {
-    const initialSeats = [];
-    for (let i = 0; i < totalSeats; i++) {
-      initialSeats.push({ id: `seat-${i}`, student: i < students.length ? students[i] : null });
-    }
-    return initialSeats;
-  });
+  // ننسخ الطلاب ونرتّبهم أبجديًا
+  const sorted = [...students].sort((a, b) =>
+    (a.name || "").localeCompare(b.name || "", "ar", { sensitivity: "base" })
+  );
+
+  const initialSeats = [];
+  for (let i = 0; i < totalSeats; i++) {
+    initialSeats.push({
+      id: `seat-${i}`,
+      student: i < sorted.length ? sorted[i] : null,
+    });
+  }
+
+  return initialSeats;
+});
+
 
   const [filterType, setFilterType] = useState('none'); // 'none' | 'learningStyle' | 'academicLevel'
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -37,7 +47,7 @@ export function SeatingChart({ students = [], onBack }) {
     });
   };
 
-  const handleSave = () => toast.success('تم حفظ خريطة الجلوس بنجاح');
+  // const handleSave = () => toast.success('تم حفظ خريطة الجلوس بنجاح');
 
   const renderGrid = () => {
     const grid = [];
@@ -80,9 +90,9 @@ export function SeatingChart({ students = [], onBack }) {
                   </select>
                 </div>
 
-                <Button onClick={handleSave} className="flex items-center gap-2">
+                {/* <Button onClick={handleSave} className="flex items-center gap-2">
                   <Save className="w-4 h-4" /> حفظ
-                </Button>
+                </Button> */}
               </div>
             </CardTitle>
           </CardHeader>
@@ -95,11 +105,11 @@ export function SeatingChart({ students = [], onBack }) {
             <div className="space-y-3">{renderGrid()}</div>
 
             <div className="flex gap-4 justify-center pt-4 border-t border-border mt-6">
-              <div className="flex items-center gap-2"><div className="w-4 h-4 bg-card border-2 border-primary rounded"></div><span className="text-sm">طالب</span></div>
+              <div className="flex items-center gap-2"><div className="w-4 h-4 bg-card border-2 border-primary rounded"></div><span className="text-sm">طالبة</span></div>
               <div className="flex items-center gap-2"><div className="w-4 h-4 bg-muted/30 border-2 border-dashed border-border rounded"></div><span className="text-sm">مقعد فارغ</span></div>
             </div>
 
-            <p className="text-center text-sm text-muted-foreground mt-3">اسحب الطلاب لتغيير أماكن الجلوس. انقر على طالب لعرض الأنشطة (يفتح النشاط بناءً على الفلتر).</p>
+            <p className="text-center text-sm text-muted-foreground mt-3">اسحب الطالبة لتغيير أماكن الجلوس. انقر على طالبة لعرض الأنشطة (يفتح النشاط بناءً على الفلتر).</p>
           </CardContent>
         </Card>
 

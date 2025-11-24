@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabaseClient';
 import { useState, useEffect } from 'react';
-import { LogOut, User, Users, Grid3x3, Clock, LayoutDashboard, Activity } from 'lucide-react';
+import { LogOut, User, Users, Grid3x3, Clock, LayoutDashboard, Activity, List } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Button } from './ui/button';
@@ -47,7 +47,7 @@ export function Dashboard({ onLogout }) {
   const [showQuickSuggest, setShowQuickSuggest] = useState(false);
   const [currentView, setCurrentView] = useState('workspace');
   const [sessionTime, setSessionTime] = useState(0);
-  const [lessonTitle, setLessonTitle] = useState('درس اللغة العربية - القراءة والفهم');
+  const [lessonTitle, setLessonTitle] = useState('درس اللغة العربية');
   const [notes, setNotes] = useState('');
   const [showAddClassroom, setShowAddClassroom] = useState(false);
   const [newClassroomName, setNewClassroomName] = useState('');
@@ -216,7 +216,7 @@ export function Dashboard({ onLogout }) {
         <nav className="w-64 bg-sidebar border-l border-sidebar-border p-5 flex flex-col gap-3 sticky top-18 h-[calc(100vh-4.5rem)] overflow-y-auto shadow-2xl shadow-primary/5">
           <h3 className="text-lg font-bold text-sidebar-foreground mb-4">الفصول الدراسية</h3>
           <Select onValueChange={setSelectedClassroom} value={selectedClassroom || ''}>
-            <SelectTrigger className="w-full p-3 border border-sidebar-border/30 rounded-xl bg-sidebar-accent/50 text-sidebar-foreground font-semibold">
+            <SelectTrigger className="w-full p-3 cursor-pointer border border-sidebar-border/30 rounded-xl bg-sidebar-accent/50 text-sidebar-foreground font-semibold">
               <SelectValue placeholder="اختر فصلاً دراسياً..." />
             </SelectTrigger>
             <SelectContent className="bg-sidebar border border-sidebar-border shadow-2xl rounded-xl z-50">
@@ -228,7 +228,7 @@ export function Dashboard({ onLogout }) {
             </SelectContent>
           </Select>
 
-          <Button variant="outline" onClick={() => setShowAddClassroom(true)} className="w-full justify-center mt-1 text-sm">
+          <Button variant="outline" onClick={() => setShowAddClassroom(true)} className="w-full  cursor-pointer justify-center mt-1 text-sm">
             + إضافة فصل جديد
           </Button>
 
@@ -237,7 +237,7 @@ export function Dashboard({ onLogout }) {
           <SidebarLink icon={LayoutDashboard} label="لوحة العمل الرئيسية" view="workspace" currentView={currentView} onClick={setCurrentView} />
           <SidebarLink icon={Users} label="بناء المجموعات" view="groups" currentView={currentView} onClick={setCurrentView} />
           <SidebarLink icon={Grid3x3} label="خريطة الجلوس" view="seating" currentView={currentView} onClick={setCurrentView} />
-          <SidebarLink icon={Users} label="قائمة الطلاب" view="students" currentView={currentView} onClick={setCurrentView} />
+          <SidebarLink icon={List} label="قائمة الطالبات" view="students" currentView={currentView} onClick={setCurrentView} />
           {/* <SidebarLink icon={Activity} label="إضافة نشاط" view="addActivity" currentView={currentView} onClick={setCurrentView} /> */}
         </nav>
 
@@ -247,18 +247,18 @@ export function Dashboard({ onLogout }) {
             {currentView === 'workspace'}
             {currentView === 'groups' && 'بناء المجموعات'}
             {currentView === 'seating' && 'خريطة الجلوس'}
-            {currentView === 'students' && 'قائمة الطلاب'}
-            {currentView === 'addStudent' && 'إضافة طالب جديد'}
-            {currentView === 'addActivity' && 'إضافة نشاط جديد'}
+            {currentView === 'students' && 'قائمة الطالبات'}
+            {currentView === 'addStudent' && 'إضافة طالبة جديدة'}
+            {/* {currentView === 'addActivity' && 'إضافة نشاط جديد'} */}
           </h1>
 
           {currentView === 'workspace' && (
             <div className="mx-auto w-full max-w-5xl space-y-8">
               <div className="mb-12">
                 <h2 className="text-4xl sm:text-5xl  text-foreground leading-tight">
-                  <span className="text-primary">رفيقك</span> في اكتشاف قدرات كل طالب
+                  <span className="text-primary">رفيقك</span> في اكتشاف قدرات كل طالبة
                 </h2>
-                <p className="text-lg text-muted-foreground mt-2 font-medium">مرحبا بك! لنبدأ العمل على تخصيص تجربة التعلم لطلاب فصلك.</p>
+                <p className="text-lg text-muted-foreground mt-2 font-medium">مرحباً بك! لنبدأ العمل على تخصيص تجربة التعلم لطالبات فصلك.</p>
               </div>
 
               <Card className="shadow-xl rounded-2xl border-2 border-primary/10">
@@ -277,10 +277,10 @@ export function Dashboard({ onLogout }) {
 
               <h2 className="text-2xl font-bold pt-4 pb-2 text-foreground">الإجراءات السريعة</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <ActionCard Icon={Users} title="بناء المجموعات" description="تنظيم الطلاب في مجموعات عمل متوازنة" onClick={() => setCurrentView('groups')} />
-                <ActionCard Icon={Grid3x3} title="خريطة الجلوس" description="تصميم وترتيب أماكن الطلاب" onClick={() => setCurrentView('seating')} />
-                <ActionCard Icon={Users} title="قائمة الطلاب" description="عرض وتعديل ملفات طلاب الفصل" onClick={() => setCurrentView('students')} />
-                <ActionCard Icon={Activity} title="الأنشطة"  onClick={() => setCurrentView('activities')} />
+                <ActionCard Icon={Users} title="بناء المجموعات" description="تنظيم الطالبات في مجموعات عمل" onClick={() => setCurrentView('groups')} />
+                <ActionCard Icon={Grid3x3} title="خريطة الجلوس" description="أنشطة للطالبات وفقاً للنمط التعليمي لكل طالبة" onClick={() => setCurrentView('seating')} />
+                <ActionCard Icon={List} title="قائمة الطالبات" description="عرض وتعديل ملفات طالبات الصف" onClick={() => setCurrentView('students')} />
+                {/* <ActionCard Icon={Activity} title="الأنشطة"  onClick={() => setCurrentView('activities')} /> */}
 
               </div>
             </div>
@@ -289,7 +289,7 @@ export function Dashboard({ onLogout }) {
           {currentView === 'groups' && <GroupBuilder students={students} onBack={() => setCurrentView('workspace')} />}
           {currentView === 'seating' && <SeatingChart students={students} onStudentClick={handleOpenStudent} onBack={() => setCurrentView('workspace')} />}
           {currentView === 'addStudent' && <AddStudent classrooms={classrooms} defaultClassroomId={selectedClassroom} onCancel={()=>setCurrentView('workspace')} onStudentAdded={handleStudentAdded} />}
-          {currentView === 'activities' && <ActivitiesList />}
+          {/* {currentView === 'activities' && <ActivitiesList />} */}
 
           {/* {currentView === 'addActivity' && (
             <ActivityCreatorModal

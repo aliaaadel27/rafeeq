@@ -7,6 +7,12 @@ import { Button } from './ui/button';
 
 export function StudentList({ students: initialStudents, classrooms, selectedClassroom, onClassroomChange, onStudentClick, onAddStudent, onAddClassroom , onBack}) {  
   const [students, setStudents] = useState(initialStudents);
+  const learningStyleLabels = {
+  visual: 'بصري',
+  auditory: 'سمعي',
+  kinesthetic: 'حركي',
+  'undefined': 'غير محدد'
+};
 
   // لو الـ prop بتتغير من بره، نحدث الـ state
   useEffect(() => {
@@ -30,7 +36,6 @@ export function StudentList({ students: initialStudents, classrooms, selectedCla
         <Button variant="ghost" onClick={onBack} className="mb-4">
             ← العودة للوحة الرئيسية
         </Button>
-        <h2 className="text-xl font-semibold">قائمة الطلاب</h2>
         <div className="flex items-center gap-2">
           <Select value={selectedClassroom || ''} onValueChange={onClassroomChange}>
             <SelectTrigger className="w-48">
@@ -40,7 +45,7 @@ export function StudentList({ students: initialStudents, classrooms, selectedCla
               {classrooms.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
             </SelectContent>
           </Select>
-          <Button size="sm" onClick={onAddStudent}>إضافة طالب</Button>
+          <Button size="sm" onClick={onAddStudent}>إضافة طالبة</Button>
           <Button size="sm" onClick={onAddClassroom}>إضافة فصل</Button>
         </div>
       </div>
@@ -50,40 +55,59 @@ export function StudentList({ students: initialStudents, classrooms, selectedCla
           <Card><CardContent className="p-4 text-center text-sm text-muted-foreground">لا يوجد طلاب في هذا الفصل</CardContent></Card>
         )}
 
-        {students.map(student => {
-          const lastIntervention = student.lastIntervention;
-          return (
-            <Card 
-              key={student.id} 
-              className="cursor-pointer hover:shadow-md transition-shadow" 
-              // onClick={() => onStudentClick(student, handleStudentUpdate)} // مررنا الـ updater
-              onClick={() => onStudentClick(student)} // مررنا الـ updater
+        {[...students]
+          .sort((a, b) => {
+            if (!a.name) return 1;
+            if (!b.name) return -1;
+            return a.name.localeCompare(b.name, 'ar');
+          })
+          .map(student => {
+            const lastIntervention = student.lastIntervention;
+            return (
+              <Card 
+                key={student.id} 
+                className="cursor-pointer hover:shadow-md transition-shadow" 
+                onClick={() => onStudentClick(student)}
+              >
+                <CardContent className="p-4 flex items-start gap-3">
+                  <Avatar className="w-12 h-12">
+                    <AvatarImage src={student.avatar} alt={student.name} />
+                    <AvatarFallback>{student.name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium truncate">{student.name}</p>
 
-            >
-              <CardContent className="p-4 flex items-start gap-3">
-                <Avatar className="w-12 h-12">
-                  <AvatarImage src={student.avatar} alt={student.name} />
-                  <AvatarFallback>{student.name?.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium truncate">{student.name}</p>
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {(student.tags || []).slice(0,2).map((tag,i)=><Badge key={i} variant="secondary" className="text-xs">{tag}</Badge>)}
-                    {(student.tags || []).length > 2 && <Badge variant="outline" className="text-xs">+{(student.tags || []).length - 2}</Badge>}
-                    {/* {student.tags.slice(0,2).map((tag,i)=><Badge key={i} variant="secondary" className="text-xs">{tag}</Badge>)}
-                    {student.tags.length>2 && <Badge variant="outline" className="text-xs">+{student.tags.length-2}</Badge>} */}
-                  </div>
-                  {lastIntervention && (
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className={`w-2 h-2 rounded-full ${getOutcomeColor(lastIntervention.outcome)}`}></div>
-                      <p className="text-xs text-muted-foreground">{new Date(lastIntervention.date).toLocaleDateString('ar-SA')}</p>
+                    {/* Badges للنمط والمستوى */}
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      <Badge variant="outline" className="text-xs">
+                        {learningStyleLabels[student.learning_style] || 'غير محدد'}
+                      </Badge>
+                      <Badge variant="outline" className="text-xs">
+                        {student.academic_level || 'عام'}
+                      </Badge>
                     </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          );
+
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {(student.tags || []).slice(0,2).map((tag,i)=>
+                        <Badge key={i} variant="secondary" className="text-xs">{tag}</Badge>
+                      )}
+                      {(student.tags || []).length > 2 && 
+                        <Badge variant="outline" className="text-xs">+{(student.tags || []).length - 2}</Badge>
+                      }
+                    </div>
+
+                    {lastIntervention && (
+                      <div className="flex items-center gap-2 mt-2">
+                        <div className={`w-2 h-2 rounded-full ${getOutcomeColor(lastIntervention.outcome)}`}></div>
+                        <p className="text-xs text-muted-foreground">{new Date(lastIntervention.date).toLocaleDateString('ar-SA')}</p>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            );
         })}
+
       </div>
     </div>
   );

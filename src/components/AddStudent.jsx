@@ -33,7 +33,7 @@ export function AddStudent({
     dob: '',
     classroomId: defaultClassroomId || '',
     learning_style: 'visual',
-    academic_level: 'متوسط', 
+    academic_level: 'ممتاز', 
 
   });
   const [selectedAvatar, setSelectedAvatar] = useState(avatarOptions[0].url);
@@ -160,6 +160,8 @@ export function AddStudent({
       dob: '',
       classroomId: defaultClassroomId || '',
       learning_style: 'visual',
+      academic_level: 'ممتاز'
+
       
     });
     // setTags([]);
@@ -173,30 +175,30 @@ export function AddStudent({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>إضافة طالب جديد</CardTitle>
-        <p className="text-sm text-muted-foreground">
+        <CardTitle>إضافة طالبة جديدة</CardTitle>
+        {/* <p className="text-sm text-muted-foreground">
           أدخل بيانات الطالب واختر له صورة رمزية ثم اربطه بالفصل المناسب.
-        </p>
+        </p> */}
       </CardHeader>
       <CardContent>
         <form className="space-y-8" onSubmit={handleSubmit}>
           <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium">اسم الطالب *</label>
+              <label className="text-sm font-medium">اسم الطالبة *</label>
               <Input
                 value={formData.name}
                 onChange={handleInputChange('name')}
-                placeholder="مثال: أحمد محمد"
+                placeholder="مثال: ريم محمد"
               />
             </div>
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <label className="text-sm font-medium">تاريخ الميلاد</label>
               <Input
                 type="date"
                 value={formData.dob}
                 onChange={handleInputChange('dob')}
               />
-            </div>
+            </div> */}
             <div className="space-y-2">
               <label className="text-sm font-medium">اختر الفصل *</label>
               <Select
@@ -217,45 +219,43 @@ export function AddStudent({
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">نمط التعلم المفضل</label>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">نمط التعلم المفضل</label>
+                <Select
+                  value={formData.learning_style}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, learning_style: value }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="visual">بصري</SelectItem>
+                    <SelectItem value="auditory">سمعي</SelectItem>
+                    <SelectItem value="kinesthetic">حركي</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+              <label className="text-sm font-medium">المستوى الأكاديمي</label>
               <Select
-                value={formData.learning_style}
+                value={formData.academic_level}
                 onValueChange={(value) =>
-                  setFormData((prev) => ({ ...prev, learning_style: value }))
+                  setFormData((prev) => ({ ...prev, academic_level: value }))
                 }
               >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="visual">بصري</SelectItem>
-                  <SelectItem value="auditory">سمعي</SelectItem>
-                  <SelectItem value="kinesthetic">حركي</SelectItem>
+                  <SelectItem value="ممتاز">ممتاز</SelectItem>
+                  <SelectItem value="جيد جداً">جيد جداً</SelectItem>
+                  <SelectItem value="جيد">جيد</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </section>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium">المستوى الأكاديمي</label>
-            <Select
-              value={formData.academic_level}
-              onValueChange={(value) =>
-                setFormData((prev) => ({ ...prev, academic_level: value }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ممتاز">ممتاز</SelectItem>
-                <SelectItem value="جيد جداً">جيد جداً</SelectItem>
-                <SelectItem value="جيد">جيد</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
 
           {/* Avatar Selection */}
           <section>
@@ -409,7 +409,7 @@ export function AddStudent({
               ) : (
                 <UserPlus className="w-4 h-4 mr-2" />
               )}
-              حفظ الطالب
+              حفظ
             </Button>
             <Button type="button" variant="ghost" onClick={handleCancel}>
               إلغاء
