@@ -14,6 +14,7 @@ import { StudentProfileModal } from './StudentProfileModal';
 import { QuickSuggestPanel } from './QuickSuggestPanel';
 import { StudentList } from './StudentList';
 import ActivitiesList from './ActivitiesList';
+import { NafesCompetition } from './NafesCompetition';
 
 // eslint-disable-next-line no-unused-vars
 const ActionCard = ({ Icon, title, description, onClick }) => (
@@ -46,7 +47,7 @@ export function Dashboard({ onLogout }) {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showQuickSuggest, setShowQuickSuggest] = useState(false);
   const [currentView, setCurrentView] = useState('workspace');
-  const [sessionTime, setSessionTime] = useState(0);
+  // const [sessionTime, setSessionTime] = useState(0);
   const [lessonTitle, setLessonTitle] = useState('درس اللغة العربية');
   const [notes, setNotes] = useState('');
   const [showAddClassroom, setShowAddClassroom] = useState(false);
@@ -54,17 +55,17 @@ export function Dashboard({ onLogout }) {
   const [creatingClassroom, setCreatingClassroom] = useState(false);
 
   // Timer
-  useEffect(() => {
-    const interval = setInterval(() => setSessionTime(prev => prev + 1), 1000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => setSessionTime(prev => prev + 1), 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
-  const formatTime = (seconds) => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
-  };
+  // const formatTime = (seconds) => {
+  //   const hrs = Math.floor(seconds / 3600);
+  //   const mins = Math.floor((seconds % 3600) / 60);
+  //   const secs = seconds % 60;
+  //   return `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+  // };
 
   // Fetch teacher and classrooms once
   useEffect(() => {
@@ -180,12 +181,12 @@ export function Dashboard({ onLogout }) {
             <span className="text-navy font-extrabold text-2xl">ر<span className="text-primary">ف</span>يق</span>
             <span className="text-sm text-muted-foreground ml-1 hidden sm:inline">| Rafeeq</span>
           </div>
-          <div className="flex items-center gap-4">
+          {/* <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 bg-muted px-4 py-2 rounded-xl border border-border">
               <Clock className="w-4 h-4 text-primary" />
               <span className="font-mono font-medium">{formatTime(sessionTime)}</span>
             </div>
-          </div>
+          </div> */}
           <div className="flex items-center gap-4">
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
@@ -238,6 +239,7 @@ export function Dashboard({ onLogout }) {
           <SidebarLink icon={Users} label="بناء المجموعات" view="groups" currentView={currentView} onClick={setCurrentView} />
           <SidebarLink icon={Grid3x3} label="خريطة الجلوس" view="seating" currentView={currentView} onClick={setCurrentView} />
           <SidebarLink icon={List} label="قائمة الطالبات" view="students" currentView={currentView} onClick={setCurrentView} />
+          <SidebarLink icon={Activity} label="نافِس" view="nafees" currentView={currentView} onClick={setCurrentView} />
           {/* <SidebarLink icon={Activity} label="إضافة نشاط" view="addActivity" currentView={currentView} onClick={setCurrentView} /> */}
         </nav>
 
@@ -248,6 +250,7 @@ export function Dashboard({ onLogout }) {
             {currentView === 'groups' && 'بناء المجموعات'}
             {currentView === 'seating' && 'خريطة الجلوس'}
             {currentView === 'students' && 'قائمة الطالبات'}
+            {currentView === 'nafees' && 'نافِس'}
             {currentView === 'addStudent' && 'إضافة طالبة جديدة'}
             {/* {currentView === 'addActivity' && 'إضافة نشاط جديد'} */}
           </h1>
@@ -280,6 +283,7 @@ export function Dashboard({ onLogout }) {
                 <ActionCard Icon={Users} title="بناء المجموعات" description="تنظيم الطالبات في مجموعات عمل" onClick={() => setCurrentView('groups')} />
                 <ActionCard Icon={Grid3x3} title="خريطة الجلوس" description="أنشطة للطالبات وفقاً للنمط التعليمي لكل طالبة" onClick={() => setCurrentView('seating')} />
                 <ActionCard Icon={List} title="قائمة الطالبات" description="عرض وتعديل ملفات طالبات الصف" onClick={() => setCurrentView('students')} />
+                <ActionCard Icon={Activity} title="نافِس" description="تحدي بين مجموعات الصف" onClick={() => setCurrentView('nafees')} />
                 {/* <ActionCard Icon={Activity} title="الأنشطة"  onClick={() => setCurrentView('activities')} /> */}
 
               </div>
@@ -289,6 +293,7 @@ export function Dashboard({ onLogout }) {
           {currentView === 'groups' && <GroupBuilder students={students} onBack={() => setCurrentView('workspace')} />}
           {currentView === 'seating' && <SeatingChart students={students} onStudentClick={handleOpenStudent} onBack={() => setCurrentView('workspace')} />}
           {currentView === 'addStudent' && <AddStudent classrooms={classrooms} defaultClassroomId={selectedClassroom} onCancel={()=>setCurrentView('workspace')} onStudentAdded={handleStudentAdded} />}
+          {currentView === 'nafees' && <NafesCompetition />}
           {/* {currentView === 'activities' && <ActivitiesList />} */}
 
           {/* {currentView === 'addActivity' && (
